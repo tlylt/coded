@@ -20,7 +20,7 @@ runs:
       run: |
         echo "Issue body: ${{ fromJSON(inputs.client_payload).issue.body }}"
         echo "::set-output name=body::$(jq --raw-input --slurp '{body: .}' <<<\"${{ fromJSON(inputs.client_payload).issue.body }}\")"
-      if: fromJSON(inputs.client_payload).event_name == 'issues'
+      # if: fromJSON(inputs.client_payload).event_name == 'issues'
       shell: bash
     - name: Get comment body
       id: get-comment
