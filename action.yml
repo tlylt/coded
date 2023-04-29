@@ -19,7 +19,7 @@ runs:
       id: get-issue
       run: |
         echo "Event: $(echo '${{ github.event.issue.body }}' | jq -c '.')"
-        echo "::set-output name=body::$(jq --raw-input --slurp '{body: .}' <<<\"${{ github.event.issue.body }}\")"
+        echo "body=${{ github.event.issue.body }}" >> $GITHUB_OUTPUT
       # if: fromJSON(inputs.client_payload).event_name == 'issues'
       shell: bash
     - name: Get comment body
@@ -32,7 +32,7 @@ runs:
       id: encode-body
       run: |
         if [ "${{ inputs.encoding }}" == "base64" ]; then
-          echo "::set-output name=encoded-body::$(echo -n ${{ steps.get-issue.outputs.body }} || echo -n ${{ steps.get-comment.outputs.body }} | base64 --wrap=0)"
+          echo "body=$(echo -n ${{ steps.get-issue.outputs.body }} || echo -n ${{ steps.get-comment.outputs.body }} | base64 --wrap=0)" >> $GITHUB_OUTPUT
         elif [ "${{ inputs.encoding }}" == "rot13" ]; then
           echo "::set-output name=encoded-body::$(echo -n ${{ steps.get-issue.outputs.body }} || echo -n ${{ steps.get-comment.outputs.body }} | tr 'A-Za-z' 'N-ZA-Mn-za-m')"
         else
@@ -40,3 +40,7 @@ runs:
           exit 1
         fi
       shell: bash
+    - name: Create comment
+      id: create-comment
+      run: |
+        echo -n ${{ steps.get-issue.outputs.body }}
