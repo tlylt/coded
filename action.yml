@@ -39,3 +39,12 @@ runs:
       run: |
         echo "Body content: ${{ steps.encode-body.outputs.body }}"
       shell: bash
+    - name: Update Issue Content
+      run: |
+        curl \
+          -X PATCH \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          ${{ github.event.issue.url }} \
+          -d '{"body":"This is the updated content of the issue."}'
+      shell: bash
