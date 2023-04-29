@@ -9,21 +9,24 @@ inputs:
     description: 'The encoding method to use: "base64" or "rot13". Default is "base64".'
     required: false
     default: 'base64'
+  client_payload:
+    description: 'The client payload object.'
+    required: false
 runs:
   using: 'composite'
   steps:
     - name: Get issue body
       id: get-issue
       run: |
-        echo "Issue body: ${{ github.event.client_payload.issue.body }}"
-        echo "::set-output name=body::$(jq --raw-input --slurp '{body: .}' <<<\"${{ github.event.client_payload.issue.body }}\")"
-      if: github.event_name == 'issues'
+        echo "Issue body: ${{ fromJSON(inputs.client_payload).issue.body }}"
+        echo "::set-output name=body::$(jq --raw-input --slurp '{body: .}' <<<\"${{ fromJSON(inputs.client_payload).issue.body }}\")"
+      if: fromJSON(inputs.client_payload).event_name == 'issues'
       shell: bash
     - name: Get comment body
       id: get-comment
       run: |
-        echo "::set-output name=body::$(jq --raw-input --slurp '{body: .}' <<<${{ github.event.client_payload.comment.body }})"
-      if: github.event_name == 'issue_comment'
+        echo "::set-output name=body::$(jq --raw-input --slurp '{body: .}' <<<${{ fromJSON(inputs.client_payload).comment.body }})"
+      if: fromJSON(inputs.client_payload).event_name == 'issue_comment'
       shell: bash
     - name: Encode body
       id: encode-body

@@ -11,4 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Coded-clique test
     steps:
-      - uses: tlylt/coded-clique@main
+      - name: My Composite Action
+        uses: tlylt/coded-clique@main
+        with:
+          client_payload: ${{ toJson(github.event.client_payload) }}
