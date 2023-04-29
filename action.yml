@@ -44,3 +44,4 @@ runs:
       id: create-comment
       run: |
         echo -n ${{ steps.get-issue.outputs.body }}
+      shell: bash
