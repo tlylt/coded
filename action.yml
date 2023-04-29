@@ -15,13 +15,12 @@ runs:
     - name: Get issue body
       id: get-issue
       run: |
-        echo "Event: $(echo '${{ github.event.issue.body }}' | jq -c '.')"
         echo "body=${{ github.event.issue.body }}" >> $GITHUB_OUTPUT
       shell: bash
     - name: Get comment body
       id: get-comment
       run: |
-        echo "::set-output name=body::$(jq --raw-input --slurp '{body: .}' <<<${{ fromJSON(inputs.client_payload).comment.body }})"
+        echo "body=${{ github.event.comment.body }}" >> $GITHUB_OUTPUT
       shell: bash
     - name: Encode body
       id: encode-body
