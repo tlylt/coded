@@ -36,5 +36,5 @@ runs:
       shell: bash
     - name: Echo body content
       run: |
-        echo "Body content: ${{ steps.get-issue.outputs.body || steps.get-comment.outputs.body }}"
+        echo "Body content: ${{ steps.encode-body.outputs.body }}"
       shell: bash
