@@ -15,7 +15,8 @@ runs:
     - name: Get issue body
       id: get-issue
       run: |
-        echo "::set-output name=body::$(jq --raw-input --slurp '{body: .}' <<<${{ github.event.client_payload.issue.body }})"
+        echo "Issue body: ${{ github.event.client_payload.issue.body }}"
+        echo "::set-output name=body::$(jq --raw-input --slurp '{body: .}' <<<\"${{ github.event.client_payload.issue.body }}\")"
       if: github.event_name == 'issues'
       shell: bash
     - name: Get comment body
