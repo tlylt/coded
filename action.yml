@@ -18,7 +18,7 @@ runs:
     - name: Get issue body
       id: get-issue
       run: |
-        echo "Issue body: ${{ fromJSON(inputs.client_payload).issue.body }}"
+        echo "Issue body: ${{ fromJSON(inputs.client_payload) }}"
         echo "::set-output name=body::$(jq --raw-input --slurp '{body: .}' <<<\"${{ fromJSON(inputs.client_payload).issue.body }}\")"
       # if: fromJSON(inputs.client_payload).event_name == 'issues'
       shell: bash
