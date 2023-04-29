@@ -1,0 +1,14 @@
+name: Test coded-clique
+
+on:
+  issues:
+    types: [opened, edited]
+  issue_comment:
+    types: [created, edited]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Coded-clique test
+    steps:
+      - uses: tlylt/coded-clique@main

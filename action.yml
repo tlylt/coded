@@ -1,0 +1,38 @@
+name: Coded Clique
+description: 'Coded Clique'
+branding:
+  icon: 'target'
+  color: 'purple'
+
+inputs:
+  encoding:
+    description: 'The encoding method to use: "base64" or "rot13". Default is "base64".'
+    required: false
+    default: 'base64'
+runs:
+  using: 'composite'
+  steps:
+    - name: Get issue body
+      id: get-issue
+      run: |
+        echo "::set-output name=body::$(jq --raw-input --slurp '{body: .}' <<<${{ github.event.client_payload.issue.body }})"
+      if: github.event_name == 'issues'
+      shell: bash
+    - name: Get comment body
+      id: get-comment
+      run: |
+        echo "::set-output name=body::$(jq --raw-input --slurp '{body: .}' <<<${{ github.event.client_payload.comment.body }})"
+      if: github.event_name == 'issue_comment'
+      shell: bash
+    - name: Encode body
+      id: encode-body
+      run: |
+        if [ "${{ inputs.encoding }}" == "base64" ]; then
+          echo "::set-output name=encoded-body::$(echo -n ${{ steps.get-issue.outputs.body }} || echo -n ${{ steps.get-comment.outputs.body }} | base64 --wrap=0)"
+        elif [ "${{ inputs.encoding }}" == "rot13" ]; then
+          echo "::set-output name=encoded-body::$(echo -n ${{ steps.get-issue.outputs.body }} || echo -n ${{ steps.get-comment.outputs.body }} | tr 'A-Za-z' 'N-ZA-Mn-za-m')"
+        else
+          echo "Invalid encoding method specified: ${{ inputs.encoding }}"
+          exit 1
+        fi
+      shell: bash
