@@ -57,25 +57,25 @@ runs:
       shell: bash
     - name: Update Issue Content
       run: |
-        escaped_body="$(echo "${{ steps.wrap-body.outputs.body }}" | jq -sRr)"
+        escaped_body="$(echo "${{ steps.wrap-body.outputs.body }}" | jq -sR .)"
         echo "Escaped body: $escaped_body"
         curl \
           -X PATCH \
           -H "Authorization: Bearer ${{ inputs.token }}" \
           -H "Accept: application/vnd.github.v3+json" \
           ${{ github.event.issue.url }} \
-          -d "{\"body\":\"$escaped_body\"}"
+          -d "{\"body\": $escaped_body }"
       shell: bash
       if: github.event_name == 'issue'
     - name: Update Comment Content
       run: |
-        escaped_body="$(echo "${{ steps.wrap-body.outputs.body }}" | jq -sRr)"
+        escaped_body="$(echo "${{ steps.wrap-body.outputs.body }}" | jq -sR .)"
         echo "Escaped body: $escaped_body"
         curl \
           -X PATCH \
           -H "Authorization: Bearer ${{ inputs.token }}" \
           -H "Accept: application/vnd.github.v3+json" \
           ${{ github.event.comment.url }} \
-          -d "{\"body\":\"$escaped_body\"}"
+          -d "{\"body\": $escaped_body }"
       shell: bash
       if: github.event_name == 'issue_comment'
