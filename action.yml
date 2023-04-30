@@ -21,12 +21,10 @@ runs:
         if [ "${{ github.event_name }}" == "issues" ]; then
           echo 'body<<EOF' >> $GITHUB_OUTPUT
           echo -E '${{ github.event.issue.body }}' >> $GITHUB_OUTPUT
-          echo "" >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
         elif [ "${{ github.event_name }}" == "issue_comment" ]; then
           echo 'body<<EOF' >> $GITHUB_OUTPUT
           echo -E '${{ github.event.comment.body }}' >> $GITHUB_OUTPUT
-          echo "" >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
         else
           echo "Unsupported event type: ${{ github.event_name }}"
@@ -68,12 +66,7 @@ runs:
         echo "  </summary>" >> $GITHUB_OUTPUT
         echo "" >> $GITHUB_OUTPUT
         echo -E '${{ steps.get-body.outputs.body }}' >> $GITHUB_OUTPUT
-        echo "" >> $GITHUB_OUTPUT
         echo 'EOF' >> $GITHUB_OUTPUT
-      shell: bash
-    - name: Echo body content
-      run: |
-        echo "Body content: ${{ steps.wrap-body.outputs.body }}"
       shell: bash
     - name: Update Issue Content
       run: |
