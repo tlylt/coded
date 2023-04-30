@@ -48,9 +48,14 @@ runs:
       run: |
         echo 'body<<EOF' >> $GITHUB_OUTPUT
         echo "<details>" >> $GITHUB_OUTPUT
-        echo "  <summary>❰ ██ ◗ █☰ ◗  ❰ ▙▄ █ █▙ ▙▟ ☰${{ steps.encode-body.outputs.body }}</summary>" >> $GITHUB_OUTPUT
+        echo "  <summary>" >> $GITHUB_OUTPUT
         echo "" >> $GITHUB_OUTPUT
-        echo "${{ steps.get-body.outputs.body }}" >> $GITHUB_OUTPUT
+        echo "█▀▀ █▀█ █▀▄ █▀▀ █▀▄   █▀▀ █░░ █ █▀█ █░█ █▀▀" >> $GITHUB_OUTPUT
+        echo "█▄▄ █▄█ █▄▀ ██▄ █▄▀   █▄▄ █▄▄ █ ▀▀█ █▄█ ██▄" >> $GITHUB_OUTPUT
+        echo "☰${{ steps.encode-body.outputs.body }}</summary>" >> $GITHUB_OUTPUT
+        echo "" >> $GITHUB_OUTPUT
+        echo "" >> $GITHUB_OUTPUT
+        echo -n "${{ steps.get-body.outputs.body }}" >> $GITHUB_OUTPUT
         echo 'EOF' >> $GITHUB_OUTPUT
       shell: bash
     - name: Echo body content
