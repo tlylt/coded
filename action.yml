@@ -65,7 +65,6 @@ runs:
         echo "█▄▄ █▄█ █▄▀ ██▄ █▄▀   █▄▄ █▄▄ █ ▀▀█ █▄█ ██▄" >> $GITHUB_OUTPUT
         echo "  </summary>" >> $GITHUB_OUTPUT
         echo "" >> $GITHUB_OUTPUT
-        echo "" >> $GITHUB_OUTPUT
         echo "${{ steps.get-body.outputs.body }}" >> $GITHUB_OUTPUT
         echo 'EOF' >> $GITHUB_OUTPUT
       shell: bash
