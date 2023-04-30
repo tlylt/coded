@@ -35,9 +35,9 @@ runs:
       id: encode-body
       run: |
         if [ "${{ inputs.encoding }}" == "base64" ]; then
-          echo "body=$(echo -n ${{ steps.get-body.outputs.body }} | base64 --wrap=0)" >> $GITHUB_OUTPUT
+          echo "body=$(echo -n "${{ steps.get-body.outputs.body }}" | base64 --wrap=0)" >> $GITHUB_OUTPUT
         elif [ "${{ inputs.encoding }}" == "rot13" ]; then
-          echo "body=$(echo -n ${{ steps.get-body.outputs.body }} | tr 'A-Za-z' 'N-ZA-Mn-za-m')" >> $GITHUB_OUTPUT
+          echo "body=$(echo -n "${{ steps.get-body.outputs.body }}" | tr 'A-Za-z' 'N-ZA-Mn-za-m')" >> $GITHUB_OUTPUT
         else
           echo "Invalid encoding method specified: ${{ inputs.encoding }}"
           exit 1
