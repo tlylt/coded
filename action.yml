@@ -70,7 +70,7 @@ runs:
       shell: bash
     - name: Update Issue Content
       run: |
-        escaped_body="$(echo -E '${{ steps.wrap-body.outputs.body }}' | jq -sR .)"
+        escaped_body="$(echo -E '${{ steps.wrap-body.outputs.body }}' | jq -sR '.')"
         echo "Escaped body: $escaped_body"
         curl \
           -X PATCH \
@@ -82,7 +82,7 @@ runs:
       if: github.event_name == 'issues'
     - name: Update Comment Content
       run: |
-        escaped_body="$(echo -E '${{ steps.wrap-body.outputs.body }}' | jq -sR .)"
+        escaped_body="$(echo -E '${{ steps.wrap-body.outputs.body }}' | jq -sR '.')"
         echo "Escaped body: $escaped_body"
         curl \
           -X PATCH \
