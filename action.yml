@@ -15,24 +15,25 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Get issue body
-      id: get-issue
+    - name: Get body based on event type
+      id: get-body
       run: |
-        echo "body=${{ github.event.issue.body }}" >> $GITHUB_OUTPUT
-      shell: bash
-    - name: Get comment body
-      id: get-comment
-      run: |
-        echo "Event: $(echo '${{ toJSON(github.event) }}' | jq -c '.')"
-        echo "body=${{ github.event.comment.body }}" >> $GITHUB_OUTPUT
+        if [ "${{ github.event_name }}" == "issue" ]; then
+          echo "body=${{ github.event.issue.body }}" >> $GITHUB_OUTPUT
+        elif [ "${{ github.event_name }}" == "issue_comment" ]; then
+          echo "body=${{ github.event.comment.body }}" >> $GITHUB_OUTPUT
+        else
+          echo "Unsupported event type: ${{ github.event_name }}"
+          exit 1
+        fi
       shell: bash
     - name: Encode body
       id: encode-body
       run: |
         if [ "${{ inputs.encoding }}" == "base64" ]; then
-          echo "body=$(echo -n ${{ steps.get-issue.outputs.body }} | base64 --wrap=0)" >> $GITHUB_OUTPUT
+          echo "body=$(echo -n ${{ steps.get-body.outputs.body }} | base64 --wrap=0)" >> $GITHUB_OUTPUT
         elif [ "${{ inputs.encoding }}" == "rot13" ]; then
-          echo "body=$(echo -n ${{ steps.get-issue.outputs.body }} | tr 'A-Za-z' 'N-ZA-Mn-za-m')" >> $GITHUB_OUTPUT
+          echo "body=$(echo -n ${{ steps.get-body.outputs.body }} | tr 'A-Za-z' 'N-ZA-Mn-za-m')" >> $GITHUB_OUTPUT
         else
           echo "Invalid encoding method specified: ${{ inputs.encoding }}"
           exit 1
@@ -49,5 +50,14 @@ runs:
           -H "Authorization: Bearer ${{ inputs.token }}" \
           -H "Accept: application/vnd.github.v3+json" \
           ${{ github.event.issue.url }} \
+          -d '{"body":"${{ steps.encode-body.outputs.body }}"}'
+      shell: bash
+    - name: Update Comment Content
+      run: |
+        curl \
+          -X PATCH \
+          -H "Authorization: Bearer ${{ inputs.token }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          ${{ github.event.comment.url }} \
           -d '{"body":"${{ steps.encode-body.outputs.body }}"}'
       shell: bash
