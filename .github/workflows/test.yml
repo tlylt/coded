@@ -15,3 +15,4 @@ jobs:
         uses: tlylt/coded-clique@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          encoding: 'question'

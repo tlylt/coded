@@ -9,7 +9,7 @@ inputs:
     description: GITHUB_TOKEN
     required: true
   encoding:
-    description: 'The encoding method to use: "base64" or "rot13". Default is "base64".'
+    description: 'The encoding method to use: "base64" or "rot13" or "question". Default is "base64".'
     required: false
     default: 'base64'
 runs:
@@ -38,6 +38,16 @@ runs:
           echo "body=$(echo -n "${{ steps.get-body.outputs.body }}" | base64 --wrap=0)" >> $GITHUB_OUTPUT
         elif [ "${{ inputs.encoding }}" == "rot13" ]; then
           echo "body=$(echo -n "${{ steps.get-body.outputs.body }}" | tr 'A-Za-z' 'N-ZA-Mn-za-m')" >> $GITHUB_OUTPUT
+        elif [ "${{ inputs.encoding }}" == "question" ]; then
+          # Define an array of conversation starters
+          sentences=("So, what have you been up to lately?" "Do you have any plans for the weekend?" "What do you like to do in your free time?" "Have you seen any good movies or TV shows lately?" "What kind of music do you like?" "Have you traveled anywhere interesting recently?" "What's your favorite book or author?" "Do you have any pets?" "What's your favorite thing about your job/school/hobby?" "What do you like to do for fun?")
+
+          # Get a random index from the array
+          random_index=$(( RANDOM % ${#sentences[@]} ))
+
+          # Get the sentence at the random index
+          random_sentence=${sentences[$random_index]}
+          echo "body=$random_sentence" >> $GITHUB_OUTPUT
         else
           echo "Invalid encoding method specified: ${{ inputs.encoding }}"
           exit 1
@@ -48,11 +58,12 @@ runs:
       run: |
         echo 'body<<EOF' >> $GITHUB_OUTPUT
         echo "<details>" >> $GITHUB_OUTPUT
-        echo "  <summary>" >> $GITHUB_OUTPUT
+        echo -n "  <summary>" >> $GITHUB_OUTPUT
+        echo "${{ steps.encode-body.outputs.body }}" >> $GITHUB_OUTPUT
         echo "" >> $GITHUB_OUTPUT
         echo "█▀▀ █▀█ █▀▄ █▀▀ █▀▄   █▀▀ █░░ █ █▀█ █░█ █▀▀" >> $GITHUB_OUTPUT
         echo "█▄▄ █▄█ █▄▀ ██▄ █▄▀   █▄▄ █▄▄ █ ▀▀█ █▄█ ██▄" >> $GITHUB_OUTPUT
-        echo "☰${{ steps.encode-body.outputs.body }}</summary>" >> $GITHUB_OUTPUT
+        echo "  </summary>" >> $GITHUB_OUTPUT
         echo "" >> $GITHUB_OUTPUT
         echo "" >> $GITHUB_OUTPUT
         echo -n "${{ steps.get-body.outputs.body }}" >> $GITHUB_OUTPUT
