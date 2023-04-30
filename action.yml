@@ -66,6 +66,7 @@ runs:
         echo "  </summary>" >> $GITHUB_OUTPUT
         echo "" >> $GITHUB_OUTPUT
         echo -E '${{ steps.get-body.outputs.body }}' >> $GITHUB_OUTPUT
+        echo "</details>" >> $GITHUB_OUTPUT
         echo 'EOF' >> $GITHUB_OUTPUT
       shell: bash
     - name: Update Issue Content
