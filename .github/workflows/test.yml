@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Coded-clique test
     steps:
-      - name: My Composite Action
+      - name: coded-clique
         uses: tlylt/coded-clique@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
