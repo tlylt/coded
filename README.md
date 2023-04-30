@@ -4,28 +4,16 @@
 
 This action provides the following functionality for GitHub Actions users:
 
-- Hide your issue/comment content
+- Hide your issue/comment content from the prying eyes of a casual visitor
 
 Before:
-```
-This is a secret
-```
+
+![Before](img/before.png)
 
 After:
 
-<details>
-  <summary>What do you like to do for fun?
-
-█▀▀ █▀█ █▀▄ █▀▀ █▀▄   █▀▀ █░░ █ █▀█ █░█ █▀▀
-█▄▄ █▄█ █▄▀ ██▄ █▄▀   █▄▄ █▄▄ █ ▀▀█ █▄█ ██▄
-  </summary>
-
----
-
-This is a secret
-
-</details>
-
+![After1](img/after1.png)
+![After2](img/after2.png)
 
 # Usage
 
