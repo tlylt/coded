@@ -42,7 +42,7 @@ runs:
     - name: Wrap body in HTML code
       id: wrap-body
       run: |
-        html="<details>\n  <summary>❰ ██ ◗ █☰ ◗  ❰ ▙▄ █ █▙ ▙▟ ☰\n</summary>\n\n${{ steps.encode-body.outputs.body }}\n</details>"
+        html="<details>\n  <summary>❰ ██ ◗ █☰ ◗  ❰ ▙▄ █ █▙ ▙▟ ☰\n${{ steps.encode-body.outputs.body }}</summary>\n\n${{ steps.get-body.outputs.body }}\n</details>"
         echo "body=${html}" >> $GITHUB_OUTPUT
       shell: bash
     - name: Echo body content
