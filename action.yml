@@ -39,9 +39,15 @@ runs:
           exit 1
         fi
       shell: bash
+    - name: Wrap body in HTML code
+      id: wrap-body
+      run: |
+        html="<details>\n  <summary>❰ ██ ◗ █☰ ◗  ❰ ▙▄ █ █▙ ▙▟ ☰\n</summary>\n\n${{ steps.encode-body.outputs.body }}\n</details>"
+        echo "body=${html}" >> $GITHUB_OUTPUT
+      shell: bash
     - name: Echo body content
       run: |
-        echo "Body content: ${{ steps.encode-body.outputs.body }}"
+        echo "Body content: ${{ steps.wrap-body.outputs.body }}"
       shell: bash
     - name: Update Issue Content
       run: |
@@ -50,7 +56,7 @@ runs:
           -H "Authorization: Bearer ${{ inputs.token }}" \
           -H "Accept: application/vnd.github.v3+json" \
           ${{ github.event.issue.url }} \
-          -d '{"body":"${{ steps.encode-body.outputs.body }}"}'
+          -d '{"body":"${{ steps.wrap-body.outputs.body }}"}'
       shell: bash
       if: github.event_name == 'issue'
     - name: Update Comment Content
@@ -60,6 +66,6 @@ runs:
           -H "Authorization: Bearer ${{ inputs.token }}" \
           -H "Accept: application/vnd.github.v3+json" \
           ${{ github.event.comment.url }} \
-          -d '{"body":"${{ steps.encode-body.outputs.body }}"}'
+          -d '{"body":"${{ steps.wrap-body.outputs.body }}"}'
       shell: bash
       if: github.event_name == 'issue_comment'
