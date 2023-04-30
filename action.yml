@@ -52,6 +52,7 @@ runs:
           ${{ github.event.issue.url }} \
           -d '{"body":"${{ steps.encode-body.outputs.body }}"}'
       shell: bash
+      if: github.event_name == 'issue'
     - name: Update Comment Content
       run: |
         curl \
@@ -61,3 +62,4 @@ runs:
           ${{ github.event.comment.url }} \
           -d '{"body":"${{ steps.encode-body.outputs.body }}"}'
       shell: bash
+      if: github.event_name == 'issue_comment'
