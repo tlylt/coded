@@ -23,16 +23,16 @@ runs:
     - name: Get comment body
       id: get-comment
       run: |
+        echo ${{ github.event }}
         echo "body=${{ github.event.comment.body }}" >> $GITHUB_OUTPUT
       shell: bash
     - name: Encode body
       id: encode-body
       run: |
         if [ "${{ inputs.encoding }}" == "base64" ]; then
-          echo -n ${{ steps.get-issue.outputs.body }} | base64 --wrap=0
           echo "body=$(echo -n ${{ steps.get-issue.outputs.body }} | base64 --wrap=0)" >> $GITHUB_OUTPUT
         elif [ "${{ inputs.encoding }}" == "rot13" ]; then
-          echo "::set-output name=encoded-body::$(echo -n ${{ steps.get-issue.outputs.body }} || echo -n ${{ steps.get-comment.outputs.body }} | tr 'A-Za-z' 'N-ZA-Mn-za-m')"
+          echo "body=$(echo -n ${{ steps.get-issue.outputs.body }} | tr 'A-Za-z' 'N-ZA-Mn-za-m')" >> $GITHUB_OUTPUT
         else
           echo "Invalid encoding method specified: ${{ inputs.encoding }}"
           exit 1
