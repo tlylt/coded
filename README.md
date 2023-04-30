@@ -29,7 +29,7 @@ steps:
 | Name       | Description                                                                                        | Default        |
 |------------|----------------------------------------------------------------------------------------------------|----------------|
 | `token`    | `GITHUB_TOKEN` (`issues: write`, `pull-requests: write`) or a `repo` scoped personal-access-token. | `GITHUB_TOKEN` |
-| `encoding` | The encoding method to use: "base64" or "rot13" or "question".                                     | `base64`       |
+| `encoding` | The encoding method to use: "base64" or "question".                                                | `base64`       |
 
 For  `GITHUB_TOKEN`, go to your repository's Settings > Actions > General, under "Workflows permissions", select "Read and write permissions" and save. With that, you can simply use `token: ${{ secrets.GITHUB_TOKEN }}`.
 

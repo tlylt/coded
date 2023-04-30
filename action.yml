@@ -9,7 +9,7 @@ inputs:
     description: GITHUB_TOKEN
     required: true
   encoding:
-    description: 'The encoding method to use: "base64" or "rot13" or "question". Default is "base64".'
+    description: 'The encoding method to use: "base64" or "question". Default is "base64".'
     required: false
     default: 'base64'
 runs:
@@ -36,8 +36,6 @@ runs:
       run: |
         if [ "${{ inputs.encoding }}" == "base64" ]; then
           echo "body=$(echo -n "${{ steps.get-body.outputs.body }}" | base64 --wrap=0)" >> $GITHUB_OUTPUT
-        elif [ "${{ inputs.encoding }}" == "rot13" ]; then
-          echo "body=$(echo -n "${{ steps.get-body.outputs.body }}" | tr 'A-Za-z' 'N-ZA-Mn-za-m')" >> $GITHUB_OUTPUT
         elif [ "${{ inputs.encoding }}" == "question" ]; then
           # Define an array of conversation starters
           sentences=("So, what have you been up to lately?" "Do you have any plans for the weekend?" "What do you like to do in your free time?" "Have you seen any good movies or TV shows lately?" "What kind of music do you like?" "Have you traveled anywhere interesting recently?" "What is your favorite book or author?" "Do you have any pets?" "What is your favorite thing about your job/school/hobby?" "What do you like to do for fun?")
