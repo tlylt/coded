@@ -24,7 +24,7 @@ runs:
           echo 'EOF' >> $GITHUB_OUTPUT
         elif [ "${{ github.event_name }}" == "issue_comment" ]; then
           echo 'body<<EOF' >> $GITHUB_OUTPUT
-          echo -E '${{ github.event.comment.body }}' >> $GITHUB_OUTPUT
+          echo -E "${{ github.event.comment.body }}" >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
         else
           echo "Unsupported event type: ${{ github.event_name }}"
@@ -73,7 +73,7 @@ runs:
       shell: bash
     - name: Update Issue Content
       run: |
-        escaped_body="$(echo -E '${{ steps.wrap-body.outputs.body }}' | sed "s/'/'\\\\''/g" | jq -sR '.')"
+        escaped_body="$(echo -E "${{ steps.wrap-body.outputs.body }}" | sed "s/'/'\\\\''/g" | jq -sR '.')"
         curl \
           -X PATCH \
           -H "Authorization: Bearer ${{ inputs.token }}" \
@@ -84,7 +84,7 @@ runs:
       if: github.event_name == 'issues'
     - name: Update Comment Content
       run: |
-        escaped_body="$(echo -E '${{ steps.wrap-body.outputs.body }}' | sed "s/'/'\\\\''/g" | jq -sR '.')"
+        escaped_body="$(echo -E "${{ steps.wrap-body.outputs.body }}" | sed "s/'/'\\\\''/g" | jq -sR '.')"
         curl \
           -X PATCH \
           -H "Authorization: Bearer ${{ inputs.token }}" \
