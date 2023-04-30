@@ -57,7 +57,7 @@ runs:
       shell: bash
     - name: Update Issue Content
       run: |
-        escaped_body="$(echo "${{ steps.wrap-body.outputs.body }}" | jq -sRr @uri)"
+        escaped_body="$(echo "${{ steps.wrap-body.outputs.body }}" | jq -sRr)"
         echo "Escaped body: $escaped_body"
         curl \
           -X PATCH \
@@ -69,7 +69,7 @@ runs:
       if: github.event_name == 'issue'
     - name: Update Comment Content
       run: |
-        escaped_body="$(echo "${{ steps.wrap-body.outputs.body }}" | jq -sRr @uri)"
+        escaped_body="$(echo "${{ steps.wrap-body.outputs.body }}" | jq -sRr)"
         echo "Escaped body: $escaped_body"
         curl \
           -X PATCH \
