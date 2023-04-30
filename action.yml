@@ -24,7 +24,7 @@ runs:
           echo 'EOF' >> $GITHUB_OUTPUT
         elif [ "${{ github.event_name }}" == "issue_comment" ]; then
           echo 'body<<EOF' >> $GITHUB_OUTPUT
-          echo -E "${{ github.event.comment.body }}" >> $GITHUB_OUTPUT
+          echo -E '${{ github.event.comment.body }}' >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
         else
           echo "Unsupported event type: ${{ github.event_name }}"
@@ -40,7 +40,7 @@ runs:
           echo "body=$(echo -n "${{ steps.get-body.outputs.body }}" | tr 'A-Za-z' 'N-ZA-Mn-za-m')" >> $GITHUB_OUTPUT
         elif [ "${{ inputs.encoding }}" == "question" ]; then
           # Define an array of conversation starters
-          sentences=("So, what have you been up to lately?" "Do you have any plans for the weekend?" "What do you like to do in your free time?" "Have you seen any good movies or TV shows lately?" "What kind of music do you like?" "Have you traveled anywhere interesting recently?" "What's your favorite book or author?" "Do you have any pets?" "What's your favorite thing about your job/school/hobby?" "What do you like to do for fun?")
+          sentences=("So, what have you been up to lately?" "Do you have any plans for the weekend?" "What do you like to do in your free time?" "Have you seen any good movies or TV shows lately?" "What kind of music do you like?" "Have you traveled anywhere interesting recently?" "What is your favorite book or author?" "Do you have any pets?" "What is your favorite thing about your job/school/hobby?" "What do you like to do for fun?")
 
           # Get a random index from the array
           random_index=$(( RANDOM % ${#sentences[@]} ))
@@ -73,7 +73,7 @@ runs:
       shell: bash
     - name: Update Issue Content
       run: |
-        escaped_body="$(echo -E "${{ steps.wrap-body.outputs.body }}" | sed "s/'/'\\\\''/g" | jq -sR '.')"
+        escaped_body="$(echo -E '${{ steps.wrap-body.outputs.body }}' | jq -sR '.')"
         curl \
           -X PATCH \
           -H "Authorization: Bearer ${{ inputs.token }}" \
@@ -84,7 +84,7 @@ runs:
       if: github.event_name == 'issues'
     - name: Update Comment Content
       run: |
-        escaped_body="$(echo -E "${{ steps.wrap-body.outputs.body }}" | sed "s/'/'\\\\''/g" | jq -sR '.')"
+        escaped_body="$(echo -E '${{ steps.wrap-body.outputs.body }}' | jq -sR '.')"
         curl \
           -X PATCH \
           -H "Authorization: Bearer ${{ inputs.token }}" \
