@@ -64,7 +64,7 @@ runs:
           -H "Authorization: Bearer ${{ inputs.token }}" \
           -H "Accept: application/vnd.github.v3+json" \
           ${{ github.event.issue.url }} \
-          -d '{"body":"$escaped_body"}'
+          -d "{\"body\":\"$escaped_body\"}"
       shell: bash
       if: github.event_name == 'issue'
     - name: Update Comment Content
@@ -76,6 +76,6 @@ runs:
           -H "Authorization: Bearer ${{ inputs.token }}" \
           -H "Accept: application/vnd.github.v3+json" \
           ${{ github.event.comment.url }} \
-          -d '{"body":"${escaped_body}"}'
+          -d "{\"body\":\"$escaped_body\"}"
       shell: bash
       if: github.event_name == 'issue_comment'
