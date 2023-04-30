@@ -29,9 +29,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Coded Clique test
+    name: test
     steps:
-      - uses: tlylt/coded-clique@main
+      - name: Coded Clique
+        uses: tlylt/coded-clique@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 # Development

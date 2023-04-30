@@ -9,10 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Coded-clique test
+    name: test
     steps:
-      - name: coded-clique
+      - name: Coded Clique
         uses: tlylt/coded-clique@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          encoding: 'question'
