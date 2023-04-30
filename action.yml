@@ -19,10 +19,8 @@ runs:
       id: get-body
       run: |
         if [ "${{ github.event_name }}" == "issue" ]; then
-          # echo "body=${{ github.event.issue.body }}" >> $GITHUB_OUTPUT
           printf "body=%s" "${{ github.event.issue.body }}" >> $GITHUB_OUTPUT
         elif [ "${{ github.event_name }}" == "issue_comment" ]; then
-          # echo "body=${{ github.event.comment.body }}" >> $GITHUB_OUTPUT
           printf "body=%s" "${{ github.event.comment.body }}" >> $GITHUB_OUTPUT
         else
           echo "Unsupported event type: ${{ github.event_name }}"
