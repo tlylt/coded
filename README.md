@@ -17,11 +17,12 @@ After:
 
 # Usage
 
-You may use the action without any additional parameters.
-
 ```yaml
 steps:
-- uses: tlylt/coded-clique@v1
+  - name: Coded Clique
+    uses: tlylt/coded-clique@v1
+    with:
+      token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ### Action inputs
@@ -53,6 +54,31 @@ jobs:
         uses: tlylt/coded-clique@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+# Cookbook
+
+## Use encoding "question"
+
+```yaml
+name: Test coded-clique
+
+on:
+  issues:
+    types: [opened, edited]
+  issue_comment:
+    types: [created, edited]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: test
+    steps:
+      - name: Coded Clique
+        uses: tlylt/coded-clique@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          encoding: 'question'
 ```
 
 # Development
