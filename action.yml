@@ -71,7 +71,6 @@ runs:
     - name: Update Issue Content
       run: |
         escaped_body="$(echo -E '${{ steps.wrap-body.outputs.body }}' | jq -sR '.')"
-        echo "Escaped body: $escaped_body"
         curl \
           -X PATCH \
           -H "Authorization: Bearer ${{ inputs.token }}" \
@@ -83,7 +82,6 @@ runs:
     - name: Update Comment Content
       run: |
         escaped_body="$(echo -E '${{ steps.wrap-body.outputs.body }}' | jq -sR '.')"
-        echo "Escaped body: $escaped_body"
         curl \
           -X PATCH \
           -H "Authorization: Bearer ${{ inputs.token }}" \
