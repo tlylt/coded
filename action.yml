@@ -47,7 +47,9 @@ runs:
       id: wrap-body
       run: |
         echo 'body<<EOF' >> $GITHUB_OUTPUT
-        echo "<details>\n  <summary>❰ ██ ◗ █☰ ◗  ❰ ▙▄ █ █▙ ▙▟ ☰\n${{ steps.encode-body.outputs.body }}</summary>\n\n" >> $GITHUB_OUTPUT
+        echo "<details>" >> $GITHUB_OUTPUT
+        echo "  <summary>❰ ██ ◗ █☰ ◗  ❰ ▙▄ █ █▙ ▙▟ ☰"${{ steps.encode-body.outputs.body }}</summary>" >> $GITHUB_OUTPUT
+        echo "" >> $GITHUB_OUTPUT
         echo "${{ steps.get-body.outputs.body }}" >> $GITHUB_OUTPUT
         echo 'EOF' >> $GITHUB_OUTPUT
       shell: bash
