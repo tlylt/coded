@@ -17,17 +17,14 @@ runs:
   steps:
     - name: Get body based on event type
       id: get-body
-      env:
-        ISSUE: ${{ toJSON(github.event.issue.body) }}
-        COMMENT: ${{ toJSON(github.event.comment.body) }}
       run: |
         if [ "${{ github.event_name }}" == "issues" ]; then
-          echo 'body<<EOF' >> $GITHUB_OUTPUT
+          echo ${{ github.event.issue.updated_at }}  >> $GITHUB_OUTPUT
           echo $ISSUE  >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
         elif [ "${{ github.event_name }}" == "issue_comment" ]; then
           echo 'body<<EOF' >> $GITHUB_OUTPUT
-          echo $COMMENT  >> $GITHUB_OUTPUT
+          echo ${{ github.event.comment.updated_at }}  >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
         else
           echo "Unsupported event type: ${{ github.event_name }}"
@@ -38,7 +35,7 @@ runs:
       id: encode-body
       run: |
         if [ "${{ inputs.encoding }}" == "base64" ]; then
-          echo "body=$(echo -n '${{ steps.get-body.outputs.body }}' | base64 --wrap=0)" >> $GITHUB_OUTPUT
+          echo "body=$(echo -n "${{ steps.get-body.outputs.body }}" | base64 --wrap=0)" >> $GITHUB_OUTPUT
         elif [ "${{ inputs.encoding }}" == "question" ]; then
           # Define an array of conversation starters
           sentences=("So, what have you been up to lately?" "Do you have any plans for the weekend?" "What do you like to do in your free time?" "Have you seen any good movies or TV shows lately?" "What kind of music do you like?" "Have you traveled anywhere interesting recently?" "What is your favorite book or author?" "Do you have any pets?" "What is your favorite thing about your job/school/hobby?" "What do you like to do for fun?")
@@ -73,8 +70,7 @@ runs:
           ${{ github.event.issue.body }}
 
           </details>
-        if: github.event_name == 'issues'
-
+      if: github.event_name == 'issues'
     - name: Update Comment Content
       uses: actions-cool/issues-helper@v2
       with:
