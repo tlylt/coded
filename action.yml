@@ -17,14 +17,17 @@ runs:
   steps:
     - name: Get body based on event type
       id: get-body
+      env:
+        ISSUE: ${{ toJSON(github.event.issue.body) }}
+        COMMENT: ${{ toJSON(github.event.comment.body) }}
       run: |
         if [ "${{ github.event_name }}" == "issues" ]; then
           echo 'body<<EOF' >> $GITHUB_OUTPUT
-          echo -E '${{ github.event.issue.body }}' >> $GITHUB_OUTPUT
+          echo $ISSUE  >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
         elif [ "${{ github.event_name }}" == "issue_comment" ]; then
           echo 'body<<EOF' >> $GITHUB_OUTPUT
-          echo -E '${{ github.event.comment.body }}' >> $GITHUB_OUTPUT
+          echo $COMMENT  >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
         else
           echo "Unsupported event type: ${{ github.event_name }}"
@@ -35,7 +38,7 @@ runs:
       id: encode-body
       run: |
         if [ "${{ inputs.encoding }}" == "base64" ]; then
-          echo "body=$(echo -n "${{ steps.get-body.outputs.body }}" | base64 --wrap=0)" >> $GITHUB_OUTPUT
+          echo "body=$(echo -n '${{ steps.get-body.outputs.body }}' | base64 --wrap=0)" >> $GITHUB_OUTPUT
         elif [ "${{ inputs.encoding }}" == "question" ]; then
           # Define an array of conversation starters
           sentences=("So, what have you been up to lately?" "Do you have any plans for the weekend?" "What do you like to do in your free time?" "Have you seen any good movies or TV shows lately?" "What kind of music do you like?" "Have you traveled anywhere interesting recently?" "What is your favorite book or author?" "Do you have any pets?" "What is your favorite thing about your job/school/hobby?" "What do you like to do for fun?")
@@ -51,43 +54,44 @@ runs:
           exit 1
         fi
       shell: bash
-    - name: Wrap body in HTML code
-      id: wrap-body
-      run: |
-        echo 'body<<EOF' >> $GITHUB_OUTPUT
-        echo "<details>" >> $GITHUB_OUTPUT
-        echo -n "  <summary>" >> $GITHUB_OUTPUT
-        echo "${{ steps.encode-body.outputs.body }}" >> $GITHUB_OUTPUT
-        echo "" >> $GITHUB_OUTPUT
-        echo "█▀▀ █▀█ █▀▄ █▀▀ █▀▄   █▀▀ █░░ █ █▀█ █░█ █▀▀" >> $GITHUB_OUTPUT
-        echo "█▄▄ █▄█ █▄▀ ██▄ █▄▀   █▄▄ █▄▄ █ ▀▀█ █▄█ ██▄" >> $GITHUB_OUTPUT
-        echo "  </summary>" >> $GITHUB_OUTPUT
-        echo "" >> $GITHUB_OUTPUT
-        echo "---" >> $GITHUB_OUTPUT
-        echo "" >> $GITHUB_OUTPUT
-        echo -E '${{ steps.get-body.outputs.body }}' >> $GITHUB_OUTPUT
-        echo "</details>" >> $GITHUB_OUTPUT
-        echo 'EOF' >> $GITHUB_OUTPUT
-      shell: bash
     - name: Update Issue Content
-      run: |
-        escaped_body="$(echo -E '${{ steps.wrap-body.outputs.body }}' | jq -sR '.')"
-        curl \
-          -X PATCH \
-          -H "Authorization: Bearer ${{ inputs.token }}" \
-          -H "Accept: application/vnd.github.v3+json" \
-          ${{ github.event.issue.url }} \
-          -d "{\"body\": $escaped_body }"
-      shell: bash
-      if: github.event_name == 'issues'
+      uses: actions-cool/issues-helper@v2
+      with:
+        actions: 'update-issue'
+        token: ${{ inputs.token }}
+        issue-number: ${{ github.event.issue.number }}
+        body: |
+          <details>
+          <summary>${{ steps.encode-body.outputs.body }}
+
+          █▀▀ █▀█ █▀▄ █▀▀ █▀▄   █▀▀ █░░ █ █▀█ █░█ █▀▀
+          █▄▄ █▄█ █▄▀ ██▄ █▄▀   █▄▄ █▄▄ █ ▀▀█ █▄█ ██▄
+          </summary>
+
+          ---
+
+          ${{ github.event.issue.body }}
+
+          </details>
+        if: github.event_name == 'issues'
+
     - name: Update Comment Content
-      run: |
-        escaped_body="$(echo -E '${{ steps.wrap-body.outputs.body }}' | jq -sR '.')"
-        curl \
-          -X PATCH \
-          -H "Authorization: Bearer ${{ inputs.token }}" \
-          -H "Accept: application/vnd.github.v3+json" \
-          ${{ github.event.comment.url }} \
-          -d "{\"body\": $escaped_body }"
-      shell: bash
+      uses: actions-cool/issues-helper@v2
+      with:
+        actions: 'update-comment'
+        token: ${{ inputs.token }}
+        comment-id: ${{ github.event.comment.id }}
+        body: |
+          <details>
+          <summary> ${{ steps.encode-body.outputs.body }}
+
+          █▀▀ █▀█ █▀▄ █▀▀ █▀▄   █▀▀ █░░ █ █▀█ █░█ █▀▀
+          █▄▄ █▄█ █▄▀ ██▄ █▄▀   █▄▄ █▄▄ █ ▀▀█ █▄█ ██▄
+          </summary>
+
+          ---
+
+          ${{ github.event.comment.body }}
+
+          </details>
       if: github.event_name == 'issue_comment'
