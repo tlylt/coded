@@ -19,8 +19,8 @@ runs:
       id: get-body
       run: |
         if [ "${{ github.event_name }}" == "issues" ]; then
+          echo 'body<<EOF' >> $GITHUB_OUTPUT
           echo ${{ github.event.issue.updated_at }}  >> $GITHUB_OUTPUT
-          echo $ISSUE  >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
         elif [ "${{ github.event_name }}" == "issue_comment" ]; then
           echo 'body<<EOF' >> $GITHUB_OUTPUT
